@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<markers>
+     {% for object in query_set %}
+     <marker id="{{ object.pk }}" category="{{ object.category}}" address="{{ object.address }}" type="{{ object.type }}" slug="{{ object.slug }}"></marker>
+     {% endfor %}
+</markers>

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+<div class="container main-container m-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="text-center">Add Your Listing Below</h2>
+      <hr class="mb-5">
+    </div>
+  </div>
+  <div class="row justify-content-center ma">
+    <div class="col-md-6">
+      <p style="color: tomato">Note: The fields marked * are compulsory</p>
+      <form method="post" enctype="multipart/form-data">
+        {% include "messages.html" %}
+        {% csrf_token %}
+        {{ form1|crispy }}
+        {{ form2|crispy }}
+        <!-- {{ form2|crispy }} -->
+        <div class="row justify-content-center">
+          <input type="submit" class="btn btn-secondary btn-md" name="login_user" value="Submit Listing">
+        </div>
+        <div class="row justify-content-center mt-3">
+          <!-- <p>Not registered? <a href="{% url 'account:signup' %}">Signup now</a></p> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

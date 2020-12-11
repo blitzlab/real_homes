@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container main-container">
+
+<h2 class="text-center">Properties</h2>
+{% load humanize %}
+{% load crispy_forms_tags %}
+    <div class="col-md-12 listing-container">
+
+      <div class="row">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              {% if "property_updated" in message.tags %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  {{ message }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% if not images %}
+            <img class="listing-featured-img" src="{{ property.featured_image.url }}" alt="featured image">
+          {% else %}
+          <!--Carousel Wrapper-->
+          <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+            <!--Slides-->
+            <div class="carousel-inner" role="listbox">
+              {% for image in images %}
+              <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+                <img class="d-block w-100" src="{{ image.image.url }}"
+                  alt="First slide">
+              </div>
+              {% endfor %}
+
+            </div>
+            <!--/.Slides-->
+            <!--Controls-->
+            <a class="carousel-control-prev" href="#carousel-thumb" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-thumb" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+            <!--/.Controls-->
+            <ol class="carousel-indicators">
+              {% for image in images %}
+              <li data-target="#carousel-thumb" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter0 == 0 %} active {% endif %}">
+                <img src="{{ image.image.url }}" width="100">
+              </li>
+              {% endfor %}
+            </ol>
+          </div>
+          <!--/.Carousel Wrapper-->
+          {% endif %}
+
+
+
+
+
+
+          <h3 class="mt-2">{{ property.address }}</h3>
+          <div class="col-md-12 d-flex justify-content-around">
+            <h4>$ {{ property.price|floatformat|intcomma }}</h4>
+            <h5>{{property.bedrooms}} bds| {{ property.bathrooms }} ba| {{ property.area_size|intcomma }} sqft</h5>
+          </div>
+
+
+
+          <p>{{ property.description|safe }}</p>
+        </div>
+        <div class="col-md-4 pt-4">
+          <div class="row text-center">
+            <div class="col-md-12">
+              <h4>Message The Property Owner</h4>
+            </div>
+            <div class="col-md-12">
+              <!-- {% include "messages.html" %} -->
+              {% if messages %}
+                {% for message in messages %}
+                  {% if "message_sent" in message.tags %}
+                    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      {{ message }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              <form class="" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="row justify-content-center">
+                  <input type="submit" class="btn btn-primary btn-md" name="contact_owner" value="Send">
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- <p>{{ property.description|safe }}</p> -->
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+{% endblock %}

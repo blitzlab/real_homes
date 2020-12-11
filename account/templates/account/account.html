@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% load humanize %}
+
+<div class="container my-5 main-container">
+  <div class="row">
+    <div class="col-4 user-welcome">
+      Welcome {{ user.first_name }}
+    </div>
+    <div class="col-4 ml-auto text-center">
+      <a class="btn btn-primary" href="{% url 'listings:newlisting' %}">Add Listing</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  {% if my_properties %}
+    <div class="col-md-6 fetured-image-div main-container">
+      <h3 class="text-center">My Properties</h3>
+      {% include "messages.html" %}
+      {% for property in my_properties %}
+        <a href="{% url 'listings:listing_detail' property.slug %}">
+          {% if property.featured_image %}
+          <img class="fetured-image" src="{{ property.featured_image.url }}" alt="featured image">
+          {% endif %}
+          <div class="row justify-content-between pt-3 px-3">
+            <h2>&#36;&nbsp;{{ property.price|floatformat|intcomma }}</h2>&nbsp;&nbsp;{{ property.bedrooms }}&nbsp;bd&nbsp;&nbsp;{{ property.bathrooms }}&nbsp;ba&nbsp;&nbsp;{{ property.area_size|intcomma }}&nbsp;sqft
+            <p>{{ property.address }}</p>
+          </div>
+        </a>
+          <a href="{% url 'listings:update_property' property.slug %}">Edit Proprty</a>
+          <a href="{% url 'listings:delete_property' property.slug %}">Delete Property</a>
+      {% endfor %}
+    </div>
+
+
+    {% if is_paginated %}
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+          {% if page_obj.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+
+
+  {% endif %}
+</div>
+{% endblock %}

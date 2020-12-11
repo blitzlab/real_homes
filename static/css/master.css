@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Noto+Sans+JP&family=Raleway&family=Roboto&family=Roboto+Condensed&display=swap');
+.site-title{
+  font-family: 'Varela Round', sans-serif;
+  color: green;
+  font-weight: 900;
+  font-size: x-large;
+}
+
+body{
+  font-family: 'Merriweather', serif;
+  background-color: #17a2b8;
+}
+
+.col-4.user-welcome{
+  display: flex;
+  align-items: center;
+  font-family: 'Raleway', sans-serif;
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 1px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  /* background: repeating-radial-gradient(black, transparent 100px); */
+}
+
+a.nav-link.active{
+  border-bottom: solid 2px rgba(0,0,0,.9);
+}
+a.nav-link{
+  color: rgba(0,0,0,.9);
+}
+
+
+.main-container {
+    background-color: aliceblue;
+    margin-top: 50px;
+    margin-bottom: 90px;
+    padding-top: 30px;
+    padding-bottom: 15px;
+    border-radius: 20px;
+}
+
+.fetured-image-div{
+  overflow: auto;
+  /* margin: auto; */
+}
+
+img.fetured-image {
+    height: 200px;
+    width: 100%;
+}
+
+.property-map {
+    width: auto;
+    background: whitesmoke;
+    height: 350px;
+}
+
+img.listing-featured-img {
+    width: 100%;
+}
+
+.message-panel {
+    border: 1px solid darkcyan;
+    height: 150px;
+    overflow: auto;
+    border-radius: 2px;
+    background: white;
+}
+.header {
+    background: white;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../images/real-estate.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#filter-form > div.form-group{
+  padding-top: 10px;
+  padding-bottom: 10px
+}
+
+#filter-form label {
+    color: aliceblue;
+    padding-right: 5px;
+    padding-left: 15px;
+}

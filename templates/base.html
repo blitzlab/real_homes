@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% load static %}
+
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="description"
+          content="Description">
+    <meta name="keywords"
+          content="keywords">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/master.css' %}"/>
+    <title>HomeSettler - </title>
+    <!-- <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/> -->
+  </head>
+  <body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: aliceblue;">
+      <a class="navbar-brand site-title" href="{% url 'listings:index' %}">HomeSettler</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'listings:index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'listings:listings_list' %}">Properties</a>
+          </li>
+
+          {% if user.is_authenticated %}
+
+            {% if new_message_count > 0 %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'message:my_messages' %}">Messages <span class="badge badge-primary badge-lg">{{ new_message_count }}</span></a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'message:my_messages' %}">Messages</a>
+              </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:account' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:signup' %}">Signup</a>
+          </li>
+        </ul>
+        {% endif %}
+      </div>
+    </nav>
+        {% block body %}
+
+        {% endblock body %}
+
+    <footer class="navbar navbar-expand-lg navbar-light mt-5 footer-bar" style="background-color: aliceblue;">
+      footer here
+    </footer>
+    <script src="{% static 'js/master.js'%}" charset="utf-8"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("a[href='" + location.pathname + "']").addClass("active");
+      });
+      // url.appendChild("linkText");.innerHTML = 'Google';
+    </script>
+
+
+    <script>
+      var customLabel = {
+        restaurant: {
+          label: 'R'
+        },
+        bar: {
+          label: 'B'
+        }
+      };
+
+        function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(-33.863276, 151.207977),
+          zoom: 12
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+          // Change this depending on the name of your PHP or XML file
+          downloadUrl('/get-xml/', function(data) {
+            // data = JSON.parse(data);
+            var xml = data.responseXML;
+            console.log(xml);
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var category = markerElem.getAttribute('category');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var slug = markerElem.getAttribute('slug');
+              // var point = new google.maps.LatLng(
+              //     parseFloat(markerElem.getAttribute('lat')),
+              //     parseFloat(markerElem.getAttribute('lng')));
+              var geocoder = new google.maps.Geocoder();
+              geocoder.geocode({
+      'address': address
+   },
+   function(results, status) {
+      if(status == google.maps.GeocoderStatus.OK) {
+        var infowincontent = document.createElement('div');
+        var strong = document.createElement('strong');
+        var detailLink = document.createElement('a');
+        detailLink.appendChild(document.createTextNode(address));
+        // strong.textContent = address
+        detailLink.title = "my title text";
+        detailLink.href = "/listings/"+slug+"/";
+        infowincontent.appendChild(detailLink);
+        infowincontent.appendChild(document.createElement('br'));
+
+        var text = document.createElement('text');
+        text.textContent = type
+        infowincontent.appendChild(text);
+        var icon = customLabel[type] || {};
+        var marker = new google.maps.Marker({
+            position: results[0].geometry.location,
+            map: map,
+            label: icon.label
+         });
+         map.setCenter(results[0].geometry.location);
+
+         marker.addListener('click', function() {
+           infoWindow.setContent(infowincontent);
+           infoWindow.open(map, marker);
+         });
+      }
+   });
+
+
+
+          });
+        });
+
+};
+
+      function downloadUrl(url, callback) {
+        var request = window.ActiveXObject ?
+            new ActiveXObject('Microsoft.XMLHTTP') :
+            new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+          if (request.readyState == 4) {
+            request.onreadystatechange = doNothing;
+            callback(request, request.status);
+          }
+        };
+
+        request.open('GET', url, true);
+        request.send(null);
+
+
+      }
+
+      function doNothing() {}
+    </script>
+    <script defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap">
+    </script>
+
+  </body>
+</html>

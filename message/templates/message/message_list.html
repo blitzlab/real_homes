@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+  <div class="col-md-12 listing-container main-container">
+    <p class="text-center">Click on message to reply</p>
+    <div class="row justify-content-center">
+      <table class="table table-bordered table-hover">
+      {% if new_message %}
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Sender</th>
+            <th scope="col">Message</th>
+            <th scope="col">Property</th>
+            <th scope="col">Date Sent</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for message in new_message %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ message.sender }}</td>
+            <td>
+              <a href="{% url 'message:messsage_detail' message.pk message.conversation_id %}">{{ message.message|slice:":8"|safe }}...</a>
+              {% if message.new %}
+                <span class="badge badge-danger badge-sm">.</span>
+              {% endif %}
+            </td>
+            <td>{{ message.property }}</td>
+            <td>{{ message.message_date }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      {% endif %}
+      </table>
+
+
+    </div>
+
+    <div class="row justify-content-center">
+      {% if is_paginated %}
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+          {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
